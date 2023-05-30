@@ -21,3 +21,11 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 fc-didactum = "fc.didactum.cli:cli"
+
+[tool.isort]
+profile = "black"
+line_length = 80
+
+[tool.black]
+line-length = 80
+target-version = ['py36', 'py37', 'py38']

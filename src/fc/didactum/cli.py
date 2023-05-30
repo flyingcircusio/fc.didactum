@@ -1,16 +1,16 @@
-import requests
 import hashlib
-from lxml import etree
-import typing
-import sys
-import socket
-
 import json
 import os
 import os.path
-from prometheus_client import Gauge, generate_latest
-import prometheus_client
+import socket
+import sys
+import typing
+
 import click
+import prometheus_client
+import requests
+from lxml import etree
+from prometheus_client import Gauge, generate_latest
 
 STATE_OK = 0
 STATE_WARNING = 1
@@ -89,7 +89,9 @@ class DidactumClient:
         if self._session_key_is_valid():
             return
         print("performing log in")
-        result = self._request("auth", name=self.username, h=self.encoded_password)
+        result = self._request(
+            "auth", name=self.username, h=self.encoded_password
+        )
         assert result.tag == "user"
         assert result.get("name") == self.username
         self.session_key = result.get("k")
