@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "fc.didactum"
+version = "0.1.0"
+description = "Nagios/Sensu-compatible check that polls Didactum devices through the XML API."
+authors = ["Christian Theune <ct@flyingcircus.io>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "fc", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+requests5 = "^1.0.0"
+lxml = "^4.9.2"
+prometheus-client = "^0.16.0"
+click = "^8.1.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+fc-didactum = "fc.didactum.cli:cli"
