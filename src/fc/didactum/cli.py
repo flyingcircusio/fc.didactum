@@ -118,6 +118,8 @@ class DidactumClient:
         if os.path.exists(self.cache_file):
             with open(self.cache_file) as fp:
                 self.load_cache(fp)
+        else:
+            self.login()
 
     def load_cache(self, fp: typing.IO):
         data = json.load(fp)
@@ -288,7 +290,7 @@ def prometheus(ctx):
 
 @cli.command
 @click.pass_context
-@click.option("--continuous/--no-continous", default=False)
+@click.option("--continuous/--no-continuous", default=False)
 @click.option("--interval", default=10, type=int)
 def update_sensu(ctx, continuous, interval):
     app = ctx.obj["app"]
