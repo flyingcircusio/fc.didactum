@@ -14,6 +14,7 @@ lxml = "^4.9.2"
 prometheus-client = "^0.16.0"
 click = "^8.1.3"
 toml = "^0.10.2"
+sdnotify = "^0.3.2"
 
 
 [build-system]
