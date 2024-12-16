@@ -13,6 +13,7 @@ from typing import Pattern
 import click
 import prometheus_client
 import requests
+import sdnotify
 import toml
 from lxml import etree
 from prometheus_client import Gauge, generate_latest
@@ -296,9 +297,24 @@ def update_sensu(ctx, continuous, interval):
     app = ctx.obj["app"]
     if not continuous:
         return app.update_sensu()
+
+    n = sdnotify.SystemdNotifier()
+    n.notify("READY=1")
+
+    # If this variable is set, systemd expects regular
+    # updates that the service is still running
+    # otherwise it will kill or restart it (depending on configuration).
+    # Ensure that the update interval is set to at most half the configured
+    # watchdog interval, see also `WatchdogSec` in systemd.service(5)
+    watchdog_interval = os.getenv("WATCHDOG_USEC")
+
     while True:
         start = time.time()
         print("Polling Didactum and updating Sensu ... ")
+        n.notify("STATUS=updating sensu")
+        if watchdog_interval:
+            n.notify("WATCHDOG=1")
+
         app.update_sensu()
         end = time.time()
         duration = end - start
@@ -308,6 +324,8 @@ def update_sensu(ctx, continuous, interval):
             )
         duration %= interval
         sleep = interval - duration
+
+        n.notify(f"STATUS=sleeping for {sleep:.2f}s")
         print(f"Sleeping for {sleep:.2f}s")
         time.sleep(sleep)
 
