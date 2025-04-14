@@ -83,7 +83,8 @@ class DidactumElement(object):
         return cls.from_dict(dict(node.items()))
 
     def state_as_sensu_status(self):
-        if self.state == "alarm":
+        # self.state is either normal, high warning, high alarm
+        if "alarm" in self.state:
             return Sensu.STATE_CRITICAL
         elif "warning" in self.state:
             return Sensu.STATE_WARNING
